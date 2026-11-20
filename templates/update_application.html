@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Update application{% endblock %}
+{% block container_class %}container-narrow{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Update application</h1></div>
+<form method="post" class="card form-card stack">
+    {% csrf_token %}
+    <div class="field">
+        <label for="job">Job</label>
+        <select name="job" id="job">
+            {% for i in jobs %}
+                <option value="{{ i.id }}" {% if application.job_id == i.id %}selected{% endif %}>{{ i.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="user">User</label>
+        <select name="user" id="user">
+            {% for i in users %}
+                <option value="{{ i.id }}" {% if application.user_id == i.id %}selected{% endif %}>{{ i.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field"><label for="cover_letter">Cover letter</label><textarea name="cover_letter" id="cover_letter" required>{{ application.cover_letter }}</textarea></div>
+    <div class="field">
+        <label for="status">Status</label>
+        <select name="status" id="status">
+            {% for value, name in statuses %}
+                <option value="{{ value }}" {% if application.status == value %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn" href="{% url 'admin_panel' %}">Back</a>
+    </div>
+</form>
+{% endblock %}

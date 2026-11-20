@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ user.username }}</h1>
+        <p>{{ user.email }}</p>
+    </div>
+    <a class="btn" href="{% url 'change_password' %}">Change password</a>
+</div>
+
+<h2 class="section-title">My jobs</h2>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Title</th><th>Company</th><th>Category</th><th>Salary</th></tr>
+        {% for i in accepted %}
+            <tr><td><a href="{% url 'job_detail' i.job.id %}">{{ i.job.title }}</a></td><td>{{ i.job.company.name }}</td><td>{{ i.job.category.name }}</td><td>{{ i.job.salary }}</td></tr>
+        {% empty %}
+            <tr><td colspan="4">No jobs yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<h2 class="section-title">My applications</h2>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Job</th><th>Company</th><th>Status</th><th>Date</th></tr>
+        {% for i in applications %}
+            <tr><td><a href="{% url 'job_detail' i.job.id %}">{{ i.job.title }}</a></td><td>{{ i.job.company.name }}</td><td><span class="badge">{{ i.get_status_display }}</span></td><td>{{ i.created_at|date:"d.m.Y" }}</td></tr>
+        {% empty %}
+            <tr><td colspan="4">No applications yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

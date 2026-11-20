@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Applications{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Applications</h1>
+        <p>Choose a job and send your application.</p>
+    </div>
+</div>
+
+<form method="post" class="card form-card stack">
+    {% csrf_token %}
+    {% if error %}
+        <p class="alert">{{ error }}</p>
+    {% endif %}
+    <div class="field">
+        <label for="job">Job</label>
+        <select name="job" id="job" required>
+            {% for i in jobs %}
+                <option value="{{ i.id }}">{{ i.title }} · {{ i.company.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field"><label for="cover_letter">Cover letter</label><textarea name="cover_letter" id="cover_letter" placeholder="Cover letter" required></textarea></div>
+    <div class="form-actions"><button type="submit" class="btn btn-primary">Send</button></div>
+</form>
+
+<h2 class="section-title">My applications</h2>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Job</th><th>Company</th><th>Status</th><th>Date</th></tr>
+        {% for i in my_applications %}
+            <tr><td><a href="{% url 'job_detail' i.job.id %}">{{ i.job.title }}</a></td><td>{{ i.job.company.name }}</td><td><span class="badge">{{ i.get_status_display }}</span></td><td>{{ i.created_at|date:"d.m.Y" }}</td></tr>
+        {% empty %}
+            <tr><td colspan="4">No applications yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

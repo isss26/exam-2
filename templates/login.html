@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="card auth-card" style="margin: var(--space-7) auto 0;">
+    <h1>Login</h1>
+    {% if error %}
+        <p class="alert">{{ error }}</p>
+    {% endif %}
+    {% if message %}
+        <p class="badge">{{ message }}</p>
+    {% endif %}
+    <form method="post" class="stack">
+        {% csrf_token %}
+        <div class="field"><label for="username">Username</label><input type="text" name="username" id="username" placeholder="Enter your username"></div>
+        <div class="field"><label for="password">Password</label><input type="password" name="password" id="password" placeholder="Enter your password"></div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+    <p class="auth-alt"><a href="{% url 'register' %}">Don't have an account? REGISTER</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Job List</h1>
+        <p>Search and filter jobs.</p>
+    </div>
+    {% if user.username == 'admin' %}
+        <a class="btn btn-primary" href="{% url 'create_job' %}">Add job</a>
+    {% endif %}
+</div>
+
+<form method="GET" class="card filters">
+    <div class="filters-grid">
+        <div class="field">
+            <label for="q">Search</label>
+            <input type="text" id="q" name="q" placeholder="Job title..." value="{{ q }}">
+        </div>
+        <div class="field">
+            <label for="category">Category</label>
+            <select id="category" name="category">
+                <option value="">All Categories</option>
+                {% for i in categories %}
+                    <option value="{{ i.id }}" {% if category == i.id|stringformat:"s" %}selected{% endif %}>{{ i.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="company">Company</label>
+            <select id="company" name="company">
+                <option value="">All Companies</option>
+                {% for i in companies %}
+                    <option value="{{ i.id }}" {% if company == i.id|stringformat:"s" %}selected{% endif %}>{{ i.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="salary_min">Min salary</label>
+            <input type="number" id="salary_min" name="salary_min" placeholder="Min Salary" value="{{ salary_min }}">
+        </div>
+        <div class="field">
+            <label for="salary_max">Max salary</label>
+            <input type="number" id="salary_max" name="salary_max" placeholder="Max Salary" value="{{ salary_max }}">
+        </div>
+        <div class="field field-check">
+            <input type="checkbox" id="no_part_time" name="no_part_time" value="1" {% if no_part_time %}checked{% endif %}>
+            <label for="no_part_time">Hide part time</label>
+        </div>
+    </div>
+    <div class="filters-actions">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a class="btn" href="{% url 'job_list' %}">Reset</a>
+    </div>
+</form>
+
+<div class="grid">
+    {% for i in jobs %}
+        <article class="card card-hover">
+            <h3>{{ i.title }}</h3>
+            <p class="meta">Company: <strong>{{ i.company.name }}</strong></p>
+            <p class="meta">Category: <strong>{{ i.category.name }}</strong></p>
+            <p class="meta">Salary: <strong>{{ i.salary }}</strong></p>
+            <p class="meta">Location: <strong>{{ i.location }}</strong></p>
+            <p class="meta"><span class="badge">{{ i.get_employment_type_display }}</span></p>
+            <div class="card-actions">
+                <a class="btn btn-sm btn-primary" href="{% url 'job_detail' i.id %}">Details</a>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty">No jobs found.</div>
+    {% endfor %}
+</div>
+{% endblock %}

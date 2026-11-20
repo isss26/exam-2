@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Update job{% endblock %}
+{% block container_class %}container-narrow{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Update job</h1></div>
+<form method="post" class="card form-card stack">
+    {% csrf_token %}
+    <div class="field"><label for="title">Title</label><input name="title" id="title" value="{{ job.title }}" required></div>
+    <div class="field"><label for="description">Description</label><textarea name="description" id="description" required>{{ job.description }}</textarea></div>
+    <div class="field"><label for="salary">Salary</label><input type="number" step="0.01" name="salary" id="salary" value="{{ job.salary|stringformat:'s' }}" required></div>
+    <div class="field"><label for="location">Location</label><input name="location" id="location" value="{{ job.location }}" required></div>
+    <div class="field">
+        <label for="employment_type">Employment type</label>
+        <select name="employment_type" id="employment_type">
+            {% for value, name in employment_types %}
+                <option value="{{ value }}" {% if job.employment_type == value %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="company">Company</label>
+        <select name="company" id="company">
+            {% for i in companies %}
+                <option value="{{ i.id }}" {% if job.company_id == i.id %}selected{% endif %}>{{ i.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="category">Category</label>
+        <select name="category" id="category">
+            {% for i in categories %}
+                <option value="{{ i.id }}" {% if job.category_id == i.id %}selected{% endif %}>{{ i.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn" href="{% url 'job_detail' job.id %}">Back</a>
+    </div>
+</form>
+{% endblock %}

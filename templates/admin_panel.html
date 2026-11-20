@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Admin panel{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Admin panel</h1>
+        <p>Create, update and delete everything.</p>
+    </div>
+</div>
+
+<div class="page-header">
+    <h2>Categories</h2>
+    <a class="btn btn-primary" href="{% url 'create_category' %}">Create category</a>
+</div>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Name</th><th>Jobs</th><th></th></tr>
+        {% for i in categories %}
+            <tr>
+                <td>{{ i.name }}</td>
+                <td>{{ i.jobs_count }}</td>
+                <td><a class="btn btn-sm" href="{% url 'update_category' i.id %}">Update</a> <a class="btn btn-sm btn-danger" href="{% url 'delete_category' i.id %}">Delete</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No categories yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="page-header" style="margin-top: var(--space-6);">
+    <h2>Companies</h2>
+    <a class="btn btn-primary" href="{% url 'create_company' %}">Create company</a>
+</div>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Name</th><th>Website</th><th>Jobs</th><th></th></tr>
+        {% for i in companies %}
+            <tr>
+                <td>{{ i.name }}</td>
+                <td>{{ i.website }}</td>
+                <td>{{ i.jobs_count }}</td>
+                <td><a class="btn btn-sm" href="{% url 'update_company' i.id %}">Update</a> <a class="btn btn-sm btn-danger" href="{% url 'delete_company' i.id %}">Delete</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">No companies yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="page-header" style="margin-top: var(--space-6);">
+    <h2>Jobs</h2>
+    <a class="btn btn-primary" href="{% url 'create_job' %}">Create job</a>
+</div>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Title</th><th>Company</th><th>Category</th><th>Salary</th><th>Author</th><th></th></tr>
+        {% for i in jobs %}
+            <tr>
+                <td><a href="{% url 'job_detail' i.id %}">{{ i.title }}</a></td>
+                <td>{{ i.company.name }}</td>
+                <td>{{ i.category.name }}</td>
+                <td>{{ i.salary }}</td>
+                <td>{{ i.created_by.username }}</td>
+                <td><a class="btn btn-sm" href="{% url 'update_job' i.id %}">Update</a> <a class="btn btn-sm btn-danger" href="{% url 'delete_job' i.id %}">Delete</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">No jobs yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="page-header" style="margin-top: var(--space-6);">
+    <h2>Applications</h2>
+    <a class="btn btn-primary" href="{% url 'create_application' %}">Create application</a>
+</div>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>Job</th><th>User</th><th>Status</th><th>Date</th><th></th></tr>
+        {% for i in applications %}
+            <tr>
+                <td>{{ i.job.title }}</td>
+                <td>{{ i.user.username }}</td>
+                <td>
+                    <form method="post" action="{% url 'update_status' i.id %}" class="row">
+                        {% csrf_token %}
+                        <select name="status">
+                            {% for value, name in statuses %}
+                                <option value="{{ value }}" {% if i.status == value %}selected{% endif %}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                    </form>
+                </td>
+                <td>{{ i.created_at|date:"d.m.Y" }}</td>
+                <td><a class="btn btn-sm" href="{% url 'update_application' i.id %}">Update</a> <a class="btn btn-sm btn-danger" href="{% url 'delete_application' i.id %}">Delete</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No applications yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

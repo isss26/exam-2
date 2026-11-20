@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block container_class %}container-narrow{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ job.title }}</h1>
+        <p>{{ job.company.name }} · {{ job.category.name }}</p>
+    </div>
+    {% if user == job.created_by or user.username == 'admin' %}
+        <div class="row">
+            <a class="btn" href="{% url 'update_job' job.id %}">Update</a>
+            <a class="btn btn-danger" href="{% url 'delete_job' job.id %}">Delete</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="card stack">
+    <p>{{ job.description|linebreaksbr }}</p>
+    <p class="meta">Salary: <strong>{{ job.salary }}</strong></p>
+    <p class="meta">Location: <strong>{{ job.location }}</strong></p>
+    <p class="meta">Employment type: <span class="badge">{{ job.get_employment_type_display }}</span></p>
+    <p class="meta">Company: <strong>{{ job.company.name }}</strong> · <a href="{{ job.company.website }}">{{ job.company.website }}</a></p>
+    <p class="meta">Category: <strong>{{ job.category.name }}</strong></p>
+    <p class="meta">Created by <strong>{{ job.created_by.username }}</strong> · {{ job.created_at|date:"d.m.Y H:i" }}</p>
+</div>
+
+<h2 class="section-title">Applications ({{ applications|length }})</h2>
+<div class="stack">
+    {% for i in applications %}
+        <div class="card">
+            <p class="meta"><strong>{{ i.user.username }}</strong> · {{ i.created_at|date:"d.m.Y" }} · <span class="badge">{{ i.get_status_display }}</span></p>
+            <p>{{ i.cover_letter }}</p>
+        </div>
+    {% empty %}
+        <div class="empty">No applications yet.</div>
+    {% endfor %}
+</div>
+{% endblock %}
